@@ -5,6 +5,8 @@
    Method
    Build-in function
    Special-use
+   Iterator/Iterable
    Numpy module
    Pandas module
+   Scipy
    ...

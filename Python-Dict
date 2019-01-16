@@ -1,0 +1,7 @@
+
+#Create a dict:
+europe = { 'spain':'madrid', 
+'france':'paris', 'germany':'berlin', 'norway':'oslo'}
+
+# Print out the keys in europe
+print(europe.keys())

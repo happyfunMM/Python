@@ -1,0 +1,85 @@
+"""
+A list can contain any Python type. Although it's not really common, a list can also contain a mix of Python types including strings,
+floats, booleans, etc.
+The printout of the previous exercise wasn't really satisfying. It's just a list of numbers representing the areas, but you can't tell 
+which area corresponds to which part of your house.
+The code on the right is the start of a solution. For some of the areas, the name of the corresponding room is already placed in front. 
+Pay attention here! "bathroom" is a string, while bath is a variable that represents the float 9.50 you specified earlier.
+"""
+# area variables (in square meters)
+hall = 11.25
+kit = 18.0
+liv = 20.0
+bed = 10.75
+bath = 9.50
+
+# Adapt list areas
+areas = ["hallway", hall, "kitchen", kit, "living room", liv, "bedroom", bed, "bathroom", bath]
+
+# Print areas
+print(areas)
+
+x = ["a", "b", "c", "d"]
+x[1]
+x[-3] # same result!
+
+"""
+After you've extracted values from a list, you can use them to perform additional calculations. 
+Take this example, where the second and fourth element of a list x are extracted. The strings that result are pasted together 
+using the + operator:
+"""
+# Create the areas list
+areas = ["hallway", 11.25, "kitchen", 18.0, "living room", 20.0, "bedroom", 10.75, "bathroom", 9.50]
+
+# Sum of kitchen and bedroom area: eat_sleep_area
+eat_sleep_area = areas[3]+areas[7]
+
+# Print the variable eat_sleep_area
+print(eat_sleep_area)
+
+"""
+Selecting single values from a list is just one part of the story. It's also possible to slice your list, which means selecting multiple elements from your list.
+Use the following syntax:
+my_list[start:end] #The start index will be included, while the end index is not.
+# Create the areas list
+areas = ["hallway", 11.25, "kitchen", 18.0, "living room", 20.0, "bedroom", 10.75, "bathroom", 9.50]
+
+# Use slicing to create downstairs
+downstairs = areas[0:6]
+
+# Use slicing to create upstairs
+
+upstairs = areas[-4:]
+# Print out downstairs and upstairs
+print(downstairs,upstairs )
+
+# Create the areas list
+areas = ["hallway", 11.25, "kitchen", 18.0, "living room", 20.0, "bedroom", 10.75, "bathroom", 9.50]
+
+# Correct the bathroom area
+areas[9] = 10.50
+
+# Change "living room" to "chill zone"
+areas[areas.index("living room")] = "chill zone"
+
+"""
+The Python code in the script already creates a list with the name areas and a copy named areas_copy. 
+Next, the first element in the areas_copy list is changed and the areas list is printed out. 
+If you hit Run Code you'll see that, although you've changed areas_copy, the change also takes effect in the areas list. 
+That's because areas and areas_copy point to the same list.
+If you want to prevent changes in areas_copy from also taking effect in areas, you'll have to do a more explicit copy of the areas list. 
+You can do this with list() or by using [:].
+"""
+
+# Create list areas
+areas = [11.25, 18.0, 20.0, 10.75, 9.50]
+
+# Create areas_copy
+areas_copy = list(areas)
+
+
+# Change areas_copy
+areas_copy[0] = 5.0
+
+# Print areas
+print(areas)

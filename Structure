@@ -8,5 +8,6 @@
    Iterator/Iterable
    Numpy module
    Pandas module
+   Matplotlib.pyplot module
    Scipy
    ...

@@ -7,19 +7,19 @@ Created on Sat Dec  1 04:28:07 2018
 #function to sort the class order refer to the frequence
 #return the class label 
 #classifier 
-def classify(genTree, featlabels, testVec):
-    firstr = list(genTree.keys())[0]
-    secondDict = genTree[firstr]
+def classify(genTree, featlabels, testVec): #iterate the all generated tree
+    firstr = list(genTree.keys())[0] #get the first key of the generated tree.
+    secondDict = genTree[firstr] #get related value(dict)
     featIndex = featlabels.index(firstr)#for the first feature in the tree, the index of it in featurelabel
     for key in secondDict.keys():
-        if key == testVec[featIndex]:
-            if type(secondDict[key]) == dict:
+        if key == testVec[featIndex]: #if the featIndex nd testVec element meet the condition key
+            if type(secondDict[key]) == dict: #if there is another dict, which means it's a node but not leaf
                 classLabel = classify(secondDict[key], featlabels, testVec)
-            else:
+            else: #it's leaf
                 classLabel = secondDict[key]
     return classLabel
     
-#fnd the label which has the lagest amount
+#find the label which has the lagest amount
 import operator
 def Majority(classList):
     classCount  = {}
@@ -89,20 +89,20 @@ def chooseBestFeatureToSplit(dataSet):
             baseFeature = i
     return baseFeature
 
-#create decision tree
-def createTree(dataSet, labels):
-    labels_copy = labels[:]
+#create decision tree， dataSet is a list including the classes stored in the last element for each line.
+def createTree(dataSet, labels): 
+    labels_copy = labels[:] #to avoid modify labels, make a copy of it. labels are the features we can use to build decision tree.
     classList = [example[-1] for example in dataSet]
-    if classList.count(classList[0]) == len(classList):
+    if classList.count(classList[0]) == len(classList): #if all the class are the same
         return classList[0]
-    if len(dataSet[0]) == 1:
+    if len(dataSet[0]) == 1: #if there are no more avaliable features
         return Majority(classList)
-    bestFeat = chooseBestFeatureToSplit(dataSet)
-    bestLabel = labels_copy[bestFeat]
-    featvalue = [example[bestFeat] for example in dataSet]
-    uniquevalue = set(featvalue)
+    bestFeat = chooseBestFeatureToSplit(dataSet) #choose the best features
+    bestLabel = labels_copy[bestFeat] #store its label
+    featvalue = [example[bestFeat] for example in dataSet] #feature value for each data point
+    uniquevalue = set(featvalue) #the different feature value
     genTree = {bestLabel : {}}
-    del labels_copy[bestFeat]
+    del labels_copy[bestFeat] #delete choosen feature from copy of labels
     for value in uniquevalue:
         subLabels = labels_copy[:]
         genTree[bestLabel][value] = createTree(splitDataSet(dataSet, bestFeat, value), subLabels)

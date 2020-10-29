@@ -1,0 +1,19 @@
+# intro using function
+from sqlalchemy import create _engine
+# create an engine
+engine = create_engine('sqlite:///census_ncy.sqlite')
+# Build a connection
+connectino = engine.connect()
+# try a simple statement
+stmt = 'select * from people'
+# execute the stmt, which gives an object we can use to fetch the results
+result_proxy = connection.execute(stmt)
+result.fetchall()
+
+
+# alternative way
+from sqlalchemy import Table, MetaData
+metadata = MeteData()
+census = Table('census', metadata, autoload=True, autoload_with = engine)
+stmt = select([census])
+results = connection.execute(stmt).fetchall()

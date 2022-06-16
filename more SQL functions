@@ -1,3 +1,0 @@
-CASE WHEN X = '1' THEN 'A'
-     WHEN X = '2' THEN' 'B'
-     ELSE 'C' END AS new_columns

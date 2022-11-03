@@ -1,0 +1,74 @@
+class visualization():
+    def get_annotation(self, anno_path, img_path, prefix, uuid):
+        file = glob.glob('%s/%s/%s*.json'%(anno_path, prefix, uuid))
+        with open(file[0], 'r') as file_obj:
+            anno_json = json.load(file_obj)
+        return anno_json
+    def anno_plot(self, img_path, prefix, uuid, annotation, save_path):
+        file = glob.glob('%s/%s/%s*.jpg'%(img_path, prefix, uuid))
+        image = cv2.imread(file[0])
+        #image = cv2.cvtColor(image[:, :, :3], cv2.COLOR_BGR2RGB) cv2 imread 默认BGR
+        segments = annotation['segments']
+        color_pt = (0, 255, 255)
+        if len(segments) > 0:
+            for seg in segments:
+                if seg['is_boundary'] != 'true':
+                    # boundary 属性不是boundary的标白色色
+                    color_line = (255, 255, 255)
+                else:
+                    # boundary属性为真的青色
+                    color_line = (255, 255, 0)
+                image = cv2.circle(image, tuple(map(int, (seg['starting_point']['x'], seg['starting_point']['y']))), 4
+                                         , color_pt, -1)
+                image = cv2.circle(image, tuple(map(int, (seg['ending_point']['x'], seg['ending_point']['y']))), 4
+                                         , color_pt, -1)
+                image = cv2.line(image, (int(seg['starting_point']['x']), int(seg['starting_point']['y'])), 
+                                 (int(seg['ending_point']['x']), int(seg['ending_point']['y'])), color_line, 2)
+        boundaries = annotation['road_boundaries']
+        if annotation['road_boundary_existence'] == 'true':
+            boundary_color = (0, 255, 0)
+            for boundary in boundaries:
+                image = cv2.circle(image, tuple(map(int, (boundary['starting_point']['x'], boundary['starting_point']['y']))), 4
+                                         , color_pt, -1)
+                image = cv2.circle(image, tuple(map(int, (boundary['ending_point']['x'], boundary['ending_point']['y']))), 4
+                                         , color_pt, -1)
+                image = cv2.line(image, (int(boundary['starting_point']['x']), int(boundary['starting_point']['y'])), 
+                                 (int(boundary['ending_point']['x']), int(boundary['ending_point']['y'])), boundary_color, 2)
+        arrows = annotation['surface_arrows']
+        if annotation['surface_arrow_existence'] == 'true':
+            for arrow in arrows:
+                if arrow.get('tip_point', '0') != '0':
+                    image = cv2.circle(image, (int(arrow['tip_point']['x']), int(arrow['tip_point']['y'])), 4,  (0, 0, 255), -2)
+                if arrow.get('tail_point', '0') != '0':
+                    image = cv2.circle(image, (int(arrow['tail_point']['x']), int(arrow['tail_point']['y'])), 4, (255, 255, 255), -2)
+        intersections = annotation['intersections']
+        if annotation['intersection_existence'] == 'true':
+            for inter in intersections:
+                for pt in inter['line']:
+                    image = cv2.drawMarker(image, (int(pt['x']), int(pt['y'])), (0, 255, 0), markerType = 1)
+        character = annotation['characters']
+        if annotation['character_existence'] =='true':
+            for char in character:
+                pt1 = (int(char['bbox']['xmin']), int(char['bbox']['ymax']))
+                pt2 = (int(char['bbox']['xmax']), int(char['bbox']['ymin']))
+                image = cv2.rectangle(image, pt1, pt2, (255, 255, 255), 2)     
+
+        #if len(annotation['slot_segments']) > 0:
+
+            #if seg['is_boundary'] != 'true':
+            #    # boundary markerType = 4
+            #    print(seg['starting_point']['x'], seg['starting_point']['y'])
+            #    img = cv2.circle(img, (seg['starting_point']['x'], seg['starting_point']['y']), 1
+            #                         , 'yellow')
+            #    img = cv2.circle(img, (seg['ending_point']['x'], seg['ending_point']['y']), 1
+            #                         , 'yellow')
+            #else:
+            #    if seg['segment_type'] == 'solid':
+            #        print(type(seg['starting_point']['x']), seg['starting_point']['y'])
+            #        img = cv2.line(img, (seg['starting_point']['x'], seg['starting_point']['y']),
+            #                         (seg['ending_point']['x'], seg['ending_point']['y']), 'green')
+            #    else:
+            #        img = cv2.line(img, (seg['starting_point']['x'], seg['starting_point']['y']),
+            #                         (seg['ending_point']['x'], seg['ending_point']['y']), 'white')
+    
+        cv2.imwrite(save_path, image)
